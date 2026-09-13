@@ -4,7 +4,8 @@ Official artist site for **THE ALKHEMYST** (persona: **Spektor**) — dark fanta
 
 **Tagline:** *From erasure, the wellspring rises.*
 
-Live source: [github.com/marcanex/the-alkhemyst](https://github.com/marcanex/the-alkhemyst)
+- **Live site:** [https://marcanex.github.io/the-alkhemyst/](https://marcanex.github.io/the-alkhemyst/)
+- **Source:** [github.com/marcanex/the-alkhemyst](https://github.com/marcanex/the-alkhemyst)
 
 ## Stack
 
@@ -75,51 +76,33 @@ Edit `SOCIALS` in `src/lib/demoTracks.ts` — replace `#` with real profile URLs
 
 ## Deploy
 
-### GitHub Pages
+### GitHub Pages (current setup)
 
-`vite.config.ts` already uses `base: './'` for relative asset paths.
+Live URL: **https://marcanex.github.io/the-alkhemyst/**
 
-1. Repo **Settings → Pages → Build from GitHub Actions** or deploy `dist/` from `main`.
-2. Or locally: `npm run build` and upload `dist/`.
+`vite.config.ts` uses `base: '/the-alkhemyst/'` for project Pages under `username.github.io/repo/`.
 
-Example Actions workflow (optional — add as `.github/workflows/pages.yml`):
+Redeploy after changes:
 
-```yaml
-name: Deploy
-on:
-  push:
-    branches: [main]
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: npm
-      - run: npm ci && npm run build
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: dist
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - id: deployment
-        uses: actions/deploy-pages@v4
+```bash
+npm run deploy
 ```
+
+That runs `npm run build` and publishes `dist/` to the `gh-pages` branch (root).
+
+Repo **Settings → Pages** should use:
+- Source: **Deploy from a branch**
+- Branch: **gh-pages** / **/** (root)
+
+If Pages is not enabled yet, after the `gh-pages` branch exists:
+
+1. Open https://github.com/marcanex/the-alkhemyst/settings/pages
+2. Set source to branch `gh-pages`, folder `/` (root)
+3. Save — site should appear at the URL above within a minute or two
 
 ### Vercel / Netlify
 
-- **Vercel:** Import the repo → framework Vite → build `npm run build` → output `dist`.
+- **Vercel:** Import the repo → framework Vite → build `npm run build` → output `dist`. Set base in Vite if the site is not at the domain root.
 - **Netlify:** Same; publish directory `dist`.
 
 Forms are client-side demos — connect Formspree, Netlify Forms, or your API before relying on them in production.
