@@ -1,44 +1,25 @@
 import type { Track } from './types'
 
+/** Built-in official releases (static assets under public/). */
 export const DEMO_TRACKS: Track[] = [
   {
-    id: 'demo-calcination',
-    title: 'Calcination',
+    id: 'effigy',
+    title: 'Effigy',
     artist: 'THE ALKHEMYST',
-    src: './assets/demo-calcination.wav',
+    src: './assets/effigy.mp3',
     coverArt: './assets/spektor-ember.jpg',
-    isDemo: true,
+    isDemo: false,
     order: 0,
     createdAt: 0,
   },
   {
-    id: 'demo-dissolution',
-    title: 'Dissolution',
+    id: 'canopy',
+    title: 'Canopy',
     artist: 'THE ALKHEMYST',
-    src: './assets/demo-dissolution.wav',
+    src: './assets/canopy.mp3',
     coverArt: './assets/spektor-ruins.jpg',
-    isDemo: true,
+    isDemo: false,
     order: 1,
-    createdAt: 0,
-  },
-  {
-    id: 'demo-coagulation',
-    title: 'Coagulation',
-    artist: 'THE ALKHEMYST',
-    src: './assets/demo-coagulation.wav',
-    coverArt: './assets/spektor-armor.jpg',
-    isDemo: true,
-    order: 2,
-    createdAt: 0,
-  },
-  {
-    id: 'demo-wellspring',
-    title: 'The Wellspring',
-    artist: 'THE ALKHEMYST',
-    src: './assets/demo-wellspring.wav',
-    coverArt: './assets/spektor-portrait.jpg',
-    isDemo: true,
-    order: 3,
     createdAt: 0,
   },
 ]

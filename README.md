@@ -62,7 +62,7 @@ Keep filenames or update paths in `src/lib/demoTracks.ts` and `src/components/He
 
 1. **In the browser:** use Upload on the Music section (persists in IndexedDB for that browser).
 2. **As shipped demos:** replace or add WAV/MP3 under `public/assets/` and edit `DEMO_TRACKS` in `src/lib/demoTracks.ts`.
-3. **Reset:** “Reset to Demos” clears user uploads from IndexedDB.
+3. **Reset:** “Reset Library” clears user uploads from IndexedDB.
 
 ## Social links
 

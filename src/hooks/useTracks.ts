@@ -14,6 +14,10 @@ function uid() {
   return `t-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`
 }
 
+function isBuiltIn(id: string) {
+  return DEMO_TRACKS.some((d) => d.id === id)
+}
+
 export function useTracks() {
   const [tracks, setTracks] = useState<Track[]>(DEMO_TRACKS)
   const [ready, setReady] = useState(false)
@@ -38,12 +42,17 @@ export function useTracks() {
           return
         }
         const hydrated: Track[] = []
+        let sawBuiltIn = false
         for (const t of stored) {
-          if (t.isDemo) {
-            const demo = DEMO_TRACKS.find((d) => d.id === t.id)
-            hydrated.push(demo ? { ...demo, order: t.order } : t)
+          const builtin = DEMO_TRACKS.find((d) => d.id === t.id)
+          if (builtin) {
+            sawBuiltIn = true
+            hydrated.push({ ...builtin, order: t.order })
             continue
           }
+          // Drop legacy synthetic demos / unknown built-ins from older deploys
+          if (t.isDemo || t.id.startsWith('demo-')) continue
+
           const audioBlob = await getBlob(t.blobKey ?? t.id)
           let src = t.src
           if (audioBlob) {
@@ -60,9 +69,12 @@ export function useTracks() {
           }
           hydrated.push({ ...t, src, coverArt })
         }
+        if (!sawBuiltIn) {
+          hydrated.unshift(...DEMO_TRACKS)
+        }
         setTracks(
           hydrated.length > 0
-            ? hydrated.sort((a, b) => a.order - b.order)
+            ? hydrated.sort((a, b) => a.order - b.order).map((t, i) => ({ ...t, order: i }))
             : DEMO_TRACKS,
         )
       } catch {
@@ -125,15 +137,18 @@ export function useTracks() {
 
   const renameTrack = useCallback(async (id: string, title: string) => {
     setTracks((prev) => prev.map((t) => (t.id === id ? { ...t, title } : t)))
+    if (isBuiltIn(id)) return
     const stored = (await getAllTracks()).find((s) => s.id === id)
-    if (stored && !stored.isDemo) {
+    if (stored) {
       await saveTrack({ ...stored, title })
     }
   }, [])
 
   const removeTrack = useCallback(async (id: string) => {
-    const stored = (await getAllTracks()).find((s) => s.id === id)
-    if (stored && !stored.isDemo) await deleteTrack(id)
+    if (!isBuiltIn(id)) {
+      const stored = (await getAllTracks()).find((s) => s.id === id)
+      if (stored) await deleteTrack(id)
+    }
     setTracks((prev) => prev.filter((x) => x.id !== id).map((x, i) => ({ ...x, order: i })))
   }, [])
 
@@ -146,9 +161,9 @@ export function useTracks() {
 
     const stored = await getAllTracks()
     const toSave = ordered.map((t) => {
-      if (t.isDemo) {
-        const demo = DEMO_TRACKS.find((d) => d.id === t.id)!
-        return { ...demo, order: t.order }
+      const builtin = DEMO_TRACKS.find((d) => d.id === t.id)
+      if (builtin) {
+        return { ...builtin, order: t.order }
       }
       const s = stored.find((x) => x.id === t.id)
       return {

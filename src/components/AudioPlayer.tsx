@@ -360,7 +360,7 @@ function UploadZone({
           }}
         />
         <button type="button" className="btn-ghost text-xs" onClick={onReset}>
-          Reset to Demos
+          Reset Library
         </button>
       </div>
     </div>

@@ -39,8 +39,8 @@ export default function App() {
             Music
           </h2>
           <p className="section-sub">
-            Demo tones of the Great Work — upload your own masters. Player persists uploads in
-            IndexedDB.
+            Official releases from THE ALKHEMYST — upload more masters anytime. Uploads persist in
+            IndexedDB on this device.
           </p>
           <AudioPlayer
             tracks={tracks}
